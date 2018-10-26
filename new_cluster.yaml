@@ -1,0 +1,45 @@
+# Add these `spec` values to `kops edit cluster ${NAME}`
+spec:
+  additionalPolicies:
+    master: |
+      [
+        {
+          "Effect": "Allow",
+          "Action": ["route53:ChangeResourceRecordSets"],
+          "Resource": ["arn:aws:route53:::hostedzone/*"]
+        },
+        {
+          "Effect": "Allow",
+          "Action": ["route53:ListHostedZones", "route53:ListResourceRecordSets"],
+          "Resource": ["*"]
+        }
+      ]
+    node: |
+      [
+        {
+          "Effect": "Allow",
+          "Action": ["route53:ChangeResourceRecordSets"],
+          "Resource": ["arn:aws:route53:::hostedzone/*"]
+        },
+        {
+          "Effect": "Allow",
+          "Action": ["route53:ListHostedZones", "route53:ListResourceRecordSets"],
+          "Resource": ["*"]
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
+              "autoscaling:DescribeAutoScalingGroups",
+              "autoscaling:DescribeAutoScalingInstances",
+              "autoscaling:DescribeLaunchConfigurations",
+              "autoscaling:DescribeTags",
+              "autoscaling:SetDesiredCapacity",
+              "autoscaling:TerminateInstanceInAutoScalingGroup"
+          ],
+          "Resource": ["*"]
+        }
+      ]
+  authorization:
+    rbac: {}
+  kubeAPIServer:
+    authorizationRbacSuperUser: admin

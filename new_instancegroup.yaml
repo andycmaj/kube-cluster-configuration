@@ -1,0 +1,10 @@
+# Configure KOPS instancegroups for auto-discovery
+# https://github.com/helm/charts/tree/master/stable/cluster-autoscaler#auto-discovery
+
+# REPLACE $NAME with your cluster name, usually in env var ${NAME}
+# CHANGE maxSize as desired and replace with existing maxSize in instancegroup config
+spec:
+  cloudLabels:
+    k8s.io/cluster-autoscaler/enabled: ""
+    kubernetes.io/cluster/$NAME: owned
+  maxSize: 10
