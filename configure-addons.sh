@@ -32,7 +32,7 @@ kubectl create -f https://raw.githubusercontent.com/kubernetes/kops/master/addon
 echo "adding Dashboard (https://github.com/kubernetes/dashboard#getting-started)..."
 kubectl create clusterrolebinding kube-system-default-admin --clusterrole=cluster-admin --serviceaccount=kube-system:default
 kubectl create clusterrolebinding kube-system-kubernetes-dashboard-admin --clusterrole=cluster-admin --serviceaccount=kube-system:kubernetes-dashboard
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml
 echo "run `kubectl -n kube-system describe secret kubernetes-dashboard-token-\{TAB\}` to get your dashboard token"
 
 # Prometheus Operator. Run before any other services to create CRDs
@@ -44,23 +44,23 @@ echo "adding Nginx-ingress (https://github.com/helm/charts/tree/master/stable/ng
 cat > nginx-ingress-values.yaml << EOF
 controller:
   image:
-    tag: 0.20.0
+    tag: 0.21.0
   publishService:
     enabled: true
   stats:
     enabled: true
   metrics:
     enabled: true
-  replicaCount: $REPLICA_COUNT
+  replicaCount: 2
   minAvailable: 2
   config:
-    use-proxy-protocol: 'false'
+    use-proxy-protocol: 'true'
   service:
     targetPorts:
       http: http
       https: http
     annotations:
-      service.beta.kubernetes.io/aws-load-balancer-ssl-cert: $SSL_CERT_ARN
+      service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-west-2:002751257357:certificate/a3c01b1b-dcef-4f8b-9a2d-ff96dbd11cbe"
       service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
       service.beta.kubernetes.io/aws-loadbalancer-ssl-ports: https
       service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: '3600'
@@ -97,6 +97,7 @@ echo "to add Cluster-autoscaling, run cluster_autoscaling.sh (https://github.com
 helm tiller run -- helm upgrade cluster-autoscaler --install stable/cluster-autoscaler --namespace kube-system \
     --set autoDiscovery.clusterName=$CLUSTER_NAME \
     --set awsRegion=us-west-2 \
-    --set image.tag=v1.2.3
+    --set image.tag=v1.13.1
+
 
 

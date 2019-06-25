@@ -39,7 +39,3 @@ spec:
           "Resource": ["*"]
         }
       ]
-  authorization:
-    rbac: {}
-  kubeAPIServer:
-    authorizationRbacSuperUser: admin
