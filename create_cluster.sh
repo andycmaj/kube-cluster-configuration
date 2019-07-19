@@ -1,13 +1,12 @@
-NAME=my-cluster.com
-KOPS_STATE_STORE=s3://my-cluster-kops-state-store
+aws s3 mb s3://${NAME}
 
 kops create cluster \
     --zones us-west-2a \
     --node-size m4.large \
     --master-size m4.large \
-    --node-count 1 \
-    --master-count 1 \
-    --master-zones us-west-2a \
+    --node-count 3 \
+    --master-count 3 \
+    --master-zones us-west-2a,us-west-2b,us-west-2c \
     ${NAME}
 
 kops edit cluster ${NAME}

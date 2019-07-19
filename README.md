@@ -39,6 +39,13 @@ $ ./configure-addons.sh -d {EXTERNAL_DNS_DOMAIN} -c {EXTERNAL_DNS_CERT_ARN} -r {
 * Installed using the [kops addon](https://github.com/kubernetes/kops/blob/master/docs/addons.md#dashboard).
 * [Heapster](https://github.com/kubernetes/kops/blob/master/docs/addons.md#monitoring-with-heapster---standalone) [needed for viewing cpu/memory metrics on dashboard](https://github.com/kubernetes/dashboard/wiki/Integrations#heapster).
 
+#### access dashboard
+
+```bash
+$ kubectl create -f dashboard_user.yaml
+$ kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep admin-user | awk '{print $1}')
+```
+
 ### [Prometheus Operator + Kube-prometheus](https://github.com/coreos/prometheus-operator/tree/master/helm)
 
 The Prometheus Operator makes the Prometheus configuration Kubernetes native and manages and operates Prometheus and Alertmanager clusters. It is a piece of the puzzle regarding full end-to-end monitoring.

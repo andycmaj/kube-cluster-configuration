@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  name: seq-ingress
+  namespace: default
+spec:
+  rules:
+    - host: seq.1560labs.com
+      http:
+        paths:
+          - backend:
+              serviceName: seq-dev
+              servicePort: http
+            path: /
